@@ -1,0 +1,202 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:DesktopGL
+/config:
+/profile:HiDef
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+/reference:..\..\Nez.Portable\bin\Debug\Nez.dll
+
+#---------------------------------- Content ---------------------------------#
+
+#begin Maps/default.png
+/copy:Maps/default.png
+
+#begin Maps/default.tsx
+/copy:Maps/default.tsx
+
+#begin Maps/Pepega.tmx
+/copy:Maps/Pepega.tmx
+
+#begin Maps/Test_Map.tmx
+/copy:Maps/Test_Map.tmx
+
+#begin Sprites/Characters/Hunter/Purple/Idle/Hunter-Purple-Idle-0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Hunter/Purple/Idle/Hunter-Purple-Idle-0.png
+
+#begin Sprites/Characters/Hunter/Purple/Idle/Hunter-Purple-Idle-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Hunter/Purple/Idle/Hunter-Purple-Idle-1.png
+
+#begin Sprites/Characters/Hunter/Purple/sheet.atlas
+/copy:Sprites/Characters/Hunter/Purple/sheet.atlas
+
+#begin Sprites/Characters/Hunter/Purple/sheet.png
+/copy:Sprites/Characters/Hunter/Purple/sheet.png
+
+#begin Sprites/Characters/Hunter/Yellow/Idle/Hunter-Yellow-Idle-0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Hunter/Yellow/Idle/Hunter-Yellow-Idle-0.png
+
+#begin Sprites/Characters/Hunter/Yellow/Idle/Hunter-Yellow-Idle-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Hunter/Yellow/Idle/Hunter-Yellow-Idle-1.png
+
+#begin Sprites/Characters/Hunter/Yellow/sheet.atlas
+/copy:Sprites/Characters/Hunter/Yellow/sheet.atlas
+
+#begin Sprites/Characters/Hunter/Yellow/sheet.png
+/copy:Sprites/Characters/Hunter/Yellow/sheet.png
+
+#begin Sprites/Characters/Mage/Purple/Idle/Mage-Purple-Idle-0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Mage/Purple/Idle/Mage-Purple-Idle-0.png
+
+#begin Sprites/Characters/Mage/Purple/sheet.atlas
+/copy:Sprites/Characters/Mage/Purple/sheet.atlas
+
+#begin Sprites/Characters/Mage/Purple/sheet.png
+/copy:Sprites/Characters/Mage/Purple/sheet.png
+
+#begin Sprites/Characters/Mage/Yellow/Idle/Mage-Yellow-Idle-0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Mage/Yellow/Idle/Mage-Yellow-Idle-0.png
+
+#begin Sprites/Characters/Mage/Yellow/sheet.atlas
+/copy:Sprites/Characters/Mage/Yellow/sheet.atlas
+
+#begin Sprites/Characters/Mage/Yellow/sheet.png
+/copy:Sprites/Characters/Mage/Yellow/sheet.png
+
+#begin Sprites/Characters/Templar/Purple/Idle/Templar-Purple-Idle-0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Templar/Purple/Idle/Templar-Purple-Idle-0.png
+
+#begin Sprites/Characters/Templar/Purple/Idle/Templar-Purple-Idle-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Templar/Purple/Idle/Templar-Purple-Idle-1.png
+
+#begin Sprites/Characters/Templar/Purple/sheet.atlas
+/copy:Sprites/Characters/Templar/Purple/sheet.atlas
+
+#begin Sprites/Characters/Templar/Purple/sheet.png
+/copy:Sprites/Characters/Templar/Purple/sheet.png
+
+#begin Sprites/Characters/Templar/Yellow/Idle/Templar-Yellow-Idle-0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Templar/Yellow/Idle/Templar-Yellow-Idle-0.png
+
+#begin Sprites/Characters/Templar/Yellow/Idle/Templar-Yellow-Idle-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Characters/Templar/Yellow/Idle/Templar-Yellow-Idle-1.png
+
+#begin Sprites/Characters/Templar/Yellow/sheet.atlas
+/copy:Sprites/Characters/Templar/Yellow/sheet.atlas
+
+#begin Sprites/Characters/Templar/Yellow/sheet.png
+/copy:Sprites/Characters/Templar/Yellow/sheet.png
+
+#begin Sprites/Debug/PepegaCoin.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Debug/PepegaCoin.png
+
+#begin Sprites/sprites.atlas
+/copy:Sprites/sprites.atlas
+
+#begin Sprites/sprites.png
+/copy:Sprites/sprites.png
+

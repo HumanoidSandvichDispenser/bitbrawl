@@ -1,0 +1,6 @@
+Characters\Hunter\Yellow
+Characters\Hunter\Purple
+Characters\Mage\Yellow
+Characters\Mage\Purple
+Characters\Templar\Yellow
+Characters\Templar\Purple

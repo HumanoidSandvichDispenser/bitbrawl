@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "project-pyro-rewrite", "project-pyro-rewrite\project-pyro-rewrite.csproj", "{42B279BC-7531-4473-8B73-3B3A6BCDD2BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez", "Nez.Portable\Nez.csproj", "{E0E1C4DE-0FA0-43F8-9792-4DA72D595140}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpritePackerHelper", "SpritePackerHelper\SpritePackerHelper.csproj", "{5C74493E-2F54-464A-A30B-46E4C5F0643F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42B279BC-7531-4473-8B73-3B3A6BCDD2BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42B279BC-7531-4473-8B73-3B3A6BCDD2BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42B279BC-7531-4473-8B73-3B3A6BCDD2BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42B279BC-7531-4473-8B73-3B3A6BCDD2BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0E1C4DE-0FA0-43F8-9792-4DA72D595140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0E1C4DE-0FA0-43F8-9792-4DA72D595140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0E1C4DE-0FA0-43F8-9792-4DA72D595140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0E1C4DE-0FA0-43F8-9792-4DA72D595140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C74493E-2F54-464A-A30B-46E4C5F0643F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C74493E-2F54-464A-A30B-46E4C5F0643F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C74493E-2F54-464A-A30B-46E4C5F0643F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C74493E-2F54-464A-A30B-46E4C5F0643F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE98AB34-14D2-408E-B055-B06BCF344FC9}
+	EndGlobalSection
+EndGlobal
