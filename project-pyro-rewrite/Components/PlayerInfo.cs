@@ -31,6 +31,10 @@ namespace project_pyro_rewrite.Components
 
         public PlayerTeam Team { get; set; } = PlayerTeam.Purple;
 
+        public float LastFireTime { get; set; }
+
+        public bool Firing { get; set; } = false;
+
         public float AbilityChargeTime { get; set; }
 
         public float DamageAbilityChargeTime { get; set; }

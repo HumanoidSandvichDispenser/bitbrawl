@@ -67,9 +67,9 @@ namespace project_pyro_rewrite.Components
                 Player.Spawn();
             }
 
-            if (Input.LeftMouseButtonPressed)
+            if (Input.LeftMouseButtonDown)
             {
-
+                Player.StartAttack();
             }
 
             if (Input.LeftMouseButtonReleased)

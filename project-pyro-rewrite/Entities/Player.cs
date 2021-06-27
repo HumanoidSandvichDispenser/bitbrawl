@@ -159,16 +159,36 @@ namespace project_pyro_rewrite.Entities
             }
         }
 
+        public void StartAttack() 
+        {
+            if (Time.TotalTime >= PlayerInfo.LastFireTime + 0.125f)
+            {
+                Entity projectileEnt = Scene.CreateEntity("projectile");
+                Components.Projectile projectile = projectileEnt.AddComponent(new Components.Projectile());
+                TiledMapMover mover = projectileEnt.AddComponent(new TiledMapMover(TiledMapMover.CollisionLayer));
+                BoxCollider boxCollider = projectileEnt.AddComponent(new BoxCollider(64, 64));
+                SpriteRenderer renderer = projectileEnt.AddComponent(new SpriteRenderer(Core.Content.Load<Texture2D>("Sprites/Debug/PepegaCoin")));
+                projectileEnt.SetScale(0.125f);
+                projectile.Speed = 512;
+                projectile.Direction = InputController.Target - Position;
+                projectileEnt.Position = Position;
+                PlayerInfo.LastFireTime = Time.TotalTime;
+            }
+        }
+
+        public void StopAttack()
+        {
+
+        }
+
         public void StartAbility()
         {
-            var playerInfo = GetComponent<Components.PlayerInfo>();
-
-            if (Time.TotalTime >= playerInfo.AbilityChargeTime)
+            if (Time.TotalTime >= PlayerInfo.AbilityChargeTime)
             {
-                playerInfo.AbilityChargeTime = Time.TotalTime + 5f;
-                playerInfo.AbilityActive = true;
+                PlayerInfo.AbilityChargeTime = Time.TotalTime + 5f;
+                PlayerInfo.AbilityActive = true;
 
-                switch (playerInfo.Class)
+                switch (PlayerInfo.Class)
                 {
                     case project_pyro_rewrite.Components.PlayerClass.Mage:
                         Entity magePreview = new Entity();
@@ -217,7 +237,7 @@ namespace project_pyro_rewrite.Entities
 
             var playerInfo = GetComponent<Components.PlayerInfo>();
 
-            FollowCamera.Deadzone.X = 960;
+            FollowCamera.Deadzone.X = 960; // camera offset fix
             FollowCamera.Deadzone.Y = 540;
 
             switch (playerInfo.Class)
@@ -235,7 +255,6 @@ namespace project_pyro_rewrite.Entities
                         {
                             preview.SetLocalPosition(targetPos);
                         }
-                        //Nez.Console.DebugConsole.Instance.Log(_attachments[AttachmentType.MageWarpPreview].Position);
                     }
                     break;
                 case project_pyro_rewrite.Components.PlayerClass.Hunter:
