@@ -67,6 +67,16 @@ namespace project_pyro_rewrite.Components
                 Player.Spawn();
             }
 
+            if (Input.LeftMouseButtonPressed)
+            {
+
+            }
+
+            if (Input.LeftMouseButtonReleased)
+            {
+
+            }
+
             if (Input.RightMouseButtonPressed)
             {
                 Player.StartAbility();
@@ -78,16 +88,6 @@ namespace project_pyro_rewrite.Components
             }
 
             Direction = direction;
-        }
-
-        private void BotInput()
-        {
-            
-        }
-
-        private void PlayerInput()
-        {
-            
         }
     }
 }

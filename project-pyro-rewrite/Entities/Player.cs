@@ -66,7 +66,8 @@ namespace project_pyro_rewrite.Entities
         {
             var camera = new FollowCamera
             {
-                FollowLerp = 0.5f,
+                FollowLerp = 1f,
+                UpdateOrder = (int)Utils.UpdateOrder.Camera
             };
             FollowCamera = AddComponent(camera);
             InputController = AddComponent(new Components.InputController());
@@ -214,9 +215,10 @@ namespace project_pyro_rewrite.Entities
         {
             base.Update();
 
-            
-
             var playerInfo = GetComponent<Components.PlayerInfo>();
+
+            FollowCamera.Deadzone.X = 960;
+            FollowCamera.Deadzone.Y = 540;
 
             switch (playerInfo.Class)
             {

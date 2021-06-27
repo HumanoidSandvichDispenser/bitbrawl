@@ -36,7 +36,7 @@ namespace project_pyro_rewrite.Scenes
             TiledMapRenderer = mapRenderer;
             _map.AddComponent(mapRenderer);
 
-            Player _localPlayer = new Player("localplayer", mapRenderer.CollisionLayer);
+            _localPlayer = new Player("localplayer", mapRenderer.CollisionLayer);
             AddEntity(_localPlayer.MakeControllablePlayer());
         }
 
@@ -121,7 +121,7 @@ namespace project_pyro_rewrite.Scenes
                     DebugConsole.Instance.Log("Local player does not exist");
                     return;
                 }
-                else if (targetPlayer == null)
+                if (targetPlayer == null)
                 {
                     DebugConsole.Instance.Log($"Target player \"{name}\" does not exist");
                     return;
@@ -134,7 +134,7 @@ namespace project_pyro_rewrite.Scenes
             }
         }
 
-        [Command("move-entity-here", "Teleports an entity to another entity's position")]
+        [Command("move-entity", "Teleports an entity to another entity's position")]
         private static void MoveEntity(string from, string to)
         {
             if (Core.Scene is GameScene scene)
@@ -146,7 +146,7 @@ namespace project_pyro_rewrite.Scenes
                     DebugConsole.Instance.Log($"Target player \"{from}\" does not exist");
                     return;
                 }
-                else if (targetPlayer == null)
+                if (targetPlayer == null)
                 {
                     DebugConsole.Instance.Log($"Target player \"{to}\" does not exist");
                     return;
