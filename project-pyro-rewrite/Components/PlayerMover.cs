@@ -43,8 +43,11 @@ namespace project_pyro_rewrite.Components
 
         public void Update()
         {
-            if (Nez.Console.DebugConsole.Instance.IsOpen)
+            if (Nez.Console.DebugConsole.Instance.IsOpen || !Player.IsAlive)
                 return;
+
+            if (_velocity.X == float.NaN || _velocity.Y == float.NaN)
+                _velocity = Vector2.Zero;
 
             _velocity *= Friction;
             if (_velocity.LengthSquared() < 1/64f)
@@ -58,6 +61,7 @@ namespace project_pyro_rewrite.Components
             // multiply the acceleration vector by speed and apply friction
             if (_accel.LengthSquared() > 0)
             {
+                _accel.Normalize();
                 _accel *= (1 - Friction) * speed;
             }
 
@@ -80,6 +84,19 @@ namespace project_pyro_rewrite.Components
             else
             {
                 _renderer.FlipX = true;
+            }
+
+            if (_boxCollider.CollidesWith(out CollisionResult result,
+                (Collider collider) => collider.HasComponent<Projectile>()))
+            {
+                Projectile projectile = result.Collider.GetComponent<Projectile>();
+                // if we don't own this entity/projectile
+                if (projectile.Owner.PlayerInfo.Team != Player.PlayerInfo.Team)
+                {
+                    Player.Hurt(projectile.Owner, 30);
+                    //Player.Kill(projectile.Owner, true); // die :)
+                    result.Collider.Entity.Destroy();
+                }
             }
         }
 

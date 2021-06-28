@@ -7,6 +7,7 @@ using Nez.Tiled;
 using project_pyro_rewrite.Entities;
 using project_pyro_rewrite.Components;
 using Nez.UI;
+using System.Collections.Generic;
 
 namespace project_pyro_rewrite.Scenes
 {
@@ -17,6 +18,9 @@ namespace project_pyro_rewrite.Scenes
 
         private Player _localPlayer = null;
         private Entity _map = null;
+        private Effects.TestingPostProcessor _postProcessor;
+
+        private Dictionary<PlayerTeam, List<Player>> _teams = new Dictionary<PlayerTeam, List<Player>>();
 
         public GameScene()
         {
@@ -28,16 +32,67 @@ namespace project_pyro_rewrite.Scenes
         {
             base.Initialize();
 
+            var effect = Content.Load<Effect>("Effects/Testing");
+            _postProcessor = new Effects.TestingPostProcessor(0, effect);
+            AddPostProcessor(_postProcessor);
+
+            _teams.Add(PlayerTeam.Purple, new List<Player>());
+            _teams.Add(PlayerTeam.Yellow, new List<Player>());
+
             TiledMap = Content.LoadTiledMap("Content/Maps/Pepega.tmx");
             _map = CreateEntity("map");
             var mapRenderer = new TiledMapRenderer(TiledMap, "Foreground");
+            mapRenderer.PhysicsLayer = (int)Utils.RenderLayer.TileMap;
             mapRenderer.SetLayersToRender(new string[] { "Details", "Foreground", "Background" });
             mapRenderer.SetRenderLayer((int)Utils.RenderLayer.TileMap);
             TiledMapRenderer = mapRenderer;
             _map.AddComponent(mapRenderer);
 
-            _localPlayer = new Player("localplayer", mapRenderer.CollisionLayer);
-            AddEntity(_localPlayer.MakeControllablePlayer());
+            AddPlayer(); // add localplayer
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            _postProcessor.Update();
+        }
+
+        public void AddPlayer(string name = "localplayer", bool bot = false)
+        {
+            if (bot)
+            {
+                Player plr = new Player(name, TiledMapRenderer.CollisionLayer);
+                plr.InputController = plr.AddComponent(new BotController
+                {
+                    MapCollisionLayer = TiledMapRenderer.CollisionLayer
+                });
+
+                AddEntity(plr);
+
+                PlayerTeam team = GetSuitableTeam();
+                _teams[team].Add(plr);
+                plr.PlayerInfo.Team = team;
+
+                plr.Kill(null, true);
+            }
+            else
+            {
+                _localPlayer = new Player("localplayer", TiledMapRenderer.CollisionLayer);
+                AddEntity(_localPlayer.MakeControllablePlayer());
+                PlayerTeam team = GetSuitableTeam();
+                _teams[team].Add(_localPlayer);
+                _localPlayer.PlayerInfo.Team = team;
+            }
+
+            _postProcessor.Play(new Vector2(1650, 1000), 750f);
+        }
+
+        public PlayerTeam GetSuitableTeam()
+        {
+            if (_teams[PlayerTeam.Yellow].Count < _teams[PlayerTeam.Purple].Count)
+                return PlayerTeam.Yellow;
+            return PlayerTeam.Purple;
         }
 
         public Vector2 FindSpawn(PlayerTeam team)
@@ -75,18 +130,7 @@ namespace project_pyro_rewrite.Scenes
         {
             if (Core.Scene is GameScene scene)
             {
-                Player plr = new Player(name, scene.TiledMapRenderer.CollisionLayer);
-                plr.InputController = plr.AddComponent(new BotController
-                {
-                    MapCollisionLayer = scene.TiledMapRenderer.CollisionLayer
-                });
-
-                plr.AttachToScene(scene);
-
-                Core.Schedule(0.1f, (t) =>
-                {
-                    plr.Spawn();
-                });
+                scene.AddPlayer("bot", true);
             }
         }
 

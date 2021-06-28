@@ -74,7 +74,7 @@ namespace project_pyro_rewrite.Entities
             return this;
         }
 
-        public void Kill(Entity attacker = null)
+        public void Kill(Entity attacker = null, bool respawn = false, float respawnTime = 5f)
         {
             var playerInfo = GetComponent<Components.PlayerInfo>();
             var camera = GetComponent<FollowCamera>();
@@ -96,6 +96,22 @@ namespace project_pyro_rewrite.Entities
 
             renderer.Enabled = false;
             mover.Enabled = false;
+
+            if (respawn)
+            {
+                Core.Schedule(respawnTime, t =>
+                {
+                    if (!IsAlive)
+                        Spawn();
+                });
+            }
+        }
+
+        public void Hurt(Entity attacker, float damage)
+        {
+            PlayerInfo.Health -= damage;
+            if (PlayerInfo.Health <= 0)
+                Kill(attacker, true);
         }
 
         public void Spawn(Vector2 position = default, bool force = false)
@@ -107,9 +123,9 @@ namespace project_pyro_rewrite.Entities
             var mover = GetComponent<TiledMapMover>();
             var playerMover = GetComponent<Components.PlayerMover>();
             var animator = GetComponent<SpriteAnimator>();
-            //FollowCamera
 
-            if (!force && playerInfo.Health > 0)
+            // if we're not forcing a respawn and we are still alive then return
+            if (!force && IsAlive)
                 return;
 
             var atlas = Core.Content.LoadSpriteAtlas($"Content/Sprites/Characters/{playerInfo.Class}/{playerInfo.Team}/sheet.atlas");
@@ -161,7 +177,10 @@ namespace project_pyro_rewrite.Entities
 
         public void StartAttack() 
         {
-            if (Time.TotalTime >= PlayerInfo.LastFireTime + 0.125f)
+            if (!IsAlive)
+                return;
+
+            if (Time.TotalTime >= PlayerInfo.LastFireTime + 0.5f)
             {
                 Entity projectileEnt = Scene.CreateEntity("projectile");
                 Components.Projectile projectile = projectileEnt.AddComponent(new Components.Projectile());
@@ -171,6 +190,7 @@ namespace project_pyro_rewrite.Entities
                 projectileEnt.SetScale(0.125f);
                 projectile.Speed = 512;
                 projectile.Direction = InputController.Target - Position;
+                projectile.Owner = this;
                 projectileEnt.Position = Position;
                 PlayerInfo.LastFireTime = Time.TotalTime;
             }
@@ -183,6 +203,9 @@ namespace project_pyro_rewrite.Entities
 
         public void StartAbility()
         {
+            if (!IsAlive)
+                return;
+
             if (Time.TotalTime >= PlayerInfo.AbilityChargeTime)
             {
                 PlayerInfo.AbilityChargeTime = Time.TotalTime + 5f;
@@ -225,7 +248,6 @@ namespace project_pyro_rewrite.Entities
                             _attachments[AttachmentType.MageWarpPreview].Destroy();
                             _attachments.Remove(AttachmentType.MageWarpPreview);
                         }
-                        //ParticleEmitter.Emit()
                         break;
                 }
             }
@@ -237,8 +259,11 @@ namespace project_pyro_rewrite.Entities
 
             var playerInfo = GetComponent<Components.PlayerInfo>();
 
-            FollowCamera.Deadzone.X = 960; // camera offset fix
-            FollowCamera.Deadzone.Y = 540;
+            if (FollowCamera != null)
+            {
+                FollowCamera.Deadzone.X = 960; // camera offset fix
+                FollowCamera.Deadzone.Y = 540;
+            }
 
             switch (playerInfo.Class)
             {

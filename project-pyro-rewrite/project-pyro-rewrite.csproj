@@ -41,6 +41,5 @@
   <ItemGroup>
     <Folder Include="EntityBuilder\" />
     <Folder Include="Commands\" />
-    <Folder Include="Extensions\" />
   </ItemGroup>
 </Project>

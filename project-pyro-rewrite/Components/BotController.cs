@@ -17,7 +17,7 @@ namespace project_pyro_rewrite.Components
         private AstarGridGraph _gridGraph;
         private Queue<Point> _currentPath;
         private Point _nextPoint;
-        private Entity _targetEntity;
+        private Entities.Player _targetEntity;
         private Vector2 _targetEntityPos;
         private float _lastRecalculationTime = 0;
 
@@ -26,36 +26,58 @@ namespace project_pyro_rewrite.Components
             base.Initialize();
 
             _gridGraph = new AstarGridGraph(MapCollisionLayer);
-            foreach (Point point in _gridGraph.Walls)
+            List<Point> points = new List<Point>(_gridGraph.Walls);
+            foreach (Point point in points)
             {
-                
+                // this tightens the walkable area for the bots so they do not get stuck along the walls
+                var neighbors = new List<Point>(_gridGraph.GetNeighbors(point));
+                var topNeighbor = neighbors.Find(p => p.Y == point.Y - 1);
+                if (topNeighbor == default)
+                {
+                    topNeighbor = new Point(point.X, point.Y - 1);
+                    _gridGraph.Walls.Add(topNeighbor);
+                }
             }
         }
 
         public override void Update()
         {
-            Vector2 direction = Vector2.Zero;
-            
-            direction = new Vector2((float)Math.Sin(Time.TotalTime));
-            direction.Normalize();
-            Direction = direction;
-            Entity localPlayer = Entity.Scene.FindEntity("localplayer");
-            Target = localPlayer.Position;
-            _targetEntity = localPlayer;
+            // become Pepega (don't think) if bot is not alive
+            if (!Player.IsAlive)
+                return;
 
-
-            if (localPlayer != null && Player.IsAlive)
+            // attack!!! if found a target
+            if (_targetEntity != null)
             {
-                // calculate path if forced to recalculate or bot has completed their current path
-                // but only if the bot has last calculated 0.5 seconds ago
-                if (Time.TotalTime > _lastRecalculationTime + 0.5f &&
-                    (ShouldRecalculate(out Entities.Player bestPlayer) || _currentPath == null))
+                // cast a ray to check if bot can see target
+                var ray = Physics.Linecast(Entity.Position, _targetEntityPos, (int)Utils.RenderLayer.TileMap);
+
+                // start firing if bot can see target
+                if (ray.Fraction == 0)
                 {
-                    _targetEntity = bestPlayer;
+                    Player.StartAttack();
+                    Vector2 targetVel = Vector2.Normalize(_targetEntity.InputController.Direction) *
+                        _targetEntity.PlayerMover.MoveSpeed;
+
+                    // predict where to shoot based on player's distance and velocity
+                    Vector2 prediction = Utils.VectorPrediction.PredictVector(_targetEntityPos - Entity.Position,
+                         targetVel, 512);
+                    Target = _targetEntityPos + prediction;
+                }
+            }
+
+            // calculate path if forced to recalculate or bot has completed their current path
+            // but only if the bot has last calculated 0.5 seconds ago
+            if (Time.TotalTime > _lastRecalculationTime + 0.5f &&
+                (ShouldRecalculate(out Entities.Player bestPlayer) || _currentPath == null))
+            {
+                _targetEntity = bestPlayer;
+                if (bestPlayer != null)
+                {
                     _targetEntityPos = bestPlayer.Position;
-                    
+
                     // calculate the path
-                    var pathPoints = _gridGraph.Search(Entity.Position.ToScaledPoint(), localPlayer.Position.ToScaledPoint());
+                    var pathPoints = _gridGraph.Search(Entity.Position.ToScaledPoint(), _targetEntity.Position.ToScaledPoint());
 
                     if (pathPoints != null)
                     {
@@ -64,24 +86,24 @@ namespace project_pyro_rewrite.Components
                         _lastRecalculationTime = Time.TotalTime;
                     }
                 }
-                else if (_currentPath != null)
+            }
+            else if (_currentPath != null)
+            {
+                Vector2 directionToPoint = _nextPoint.ToScaledVector2() - Entity.Position;
+                if (directionToPoint.LengthSquared() > 144)
                 {
-                    Vector2 directionToPoint = _nextPoint.ToScaledVector2() - Entity.Position;
-                    if (directionToPoint.LengthSquared() > 196)
+                    Direction = directionToPoint;
+                }
+                else
+                {
+                    if (_currentPath.Count > 0)
                     {
-                        Direction = Vector2.Normalize(directionToPoint);
+                        _nextPoint = _currentPath.Dequeue();
+                        //Debug.DrawHollowBox(_nextPoint.ToScaledVector2(), 4, Color.Green, 1);
                     }
                     else
                     {
-                        if (_currentPath.Count > 0)
-                        {
-                            _nextPoint = _currentPath.Dequeue();
-                            //Debug.DrawHollowBox(_nextPoint.ToScaledVector2(), 4, Color.Green, 1);
-                        }
-                        else
-                        {
-                            _currentPath = null;
-                        }
+                        _currentPath = null;
                     }
                 }
             }
@@ -109,7 +131,7 @@ namespace project_pyro_rewrite.Components
             foreach (Entities.Player plr in Entity.Scene.EntitiesOfType<Entities.Player>())
             {
                 // dead players and the current player do not count
-                if (!plr.IsAlive || plr == Entity)
+                if (!plr.IsAlive || plr.PlayerInfo.Team == Player.PlayerInfo.Team)
                     continue;
 
                 // if we currently do not have a best target, set it to the current one
@@ -156,7 +178,7 @@ namespace project_pyro_rewrite.Components
 
         public static Vector2 ToScaledVector2(this Point point)
         {
-            return (point.ToVector2() * 16) + new Vector2(12);
+            return (point.ToVector2() * 16) + new Vector2(8);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Tiled;
+using project_pyro_rewrite.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,12 +36,15 @@ namespace project_pyro_rewrite.Components
         public void Update()
         {
             //TiledMapMover mover = Entity.GetComponent<TiledMapMover>();
+            //if ()
             Vector2 move = Vector2.Normalize(Direction) * Speed * Time.DeltaTime;
-            _mover.Move(move, _boxCollider, _collisionState);
-
-            if (_collisionState.HasCollision)
+            if (!move.IsNaN())
             {
-                Entity.Destroy();
+                _mover.Move(move, _boxCollider, _collisionState);
+                if (_collisionState.HasCollision)
+                {
+                    Entity.Destroy();
+                }
             }
         }
     }

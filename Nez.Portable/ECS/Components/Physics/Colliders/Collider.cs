@@ -339,6 +339,34 @@ namespace Nez
 
 
 		/// <summary>
+		/// checks to see if this Collider collides with any other Colliders in the Scene based on the filter. The first Collider it intersects will have its collision
+		/// data returned in the CollisionResult.
+		/// </summary>
+		/// <returns><c>true</c>, if with was collidesed, <c>false</c> otherwise.</returns>
+		/// <param name="result">Result.</param>
+		/// <param name="filter">Predicate to filter Colliders</param>
+		public bool CollidesWith(out CollisionResult result, Predicate<Collider> filter)
+		{
+			result = new CollisionResult();
+
+			// fetch anything that we might collide with at our new position
+			var neighbors = Physics.BoxcastBroadphaseExcludingSelf(this, CollidesWithLayers);
+
+			foreach (var neighbor in neighbors)
+			{
+				// skip triggers or does not pass filter
+				if (neighbor.IsTrigger || !filter.Invoke(neighbor))
+					continue;
+
+				if (CollidesWith(neighbor, out result))
+					return true;
+			}
+
+			return false;
+		}
+
+
+		/// <summary>
 		/// checks to see if this Collider with motion applied (delta movement vector) collides with any collider. If it does, true will be
 		/// returned and result will be populated with collision data. Motion will be set to the maximum distance the Collider can travel
 		/// before colliding.
