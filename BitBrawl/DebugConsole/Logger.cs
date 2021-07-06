@@ -3,26 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BitBrawl.Network
+namespace BitBrawl.DebugConsole
 {
     /// <summary>
-    /// Manages network logs
+    /// Manages logs
     /// </summary>
     public class Logger : ILogger
     {
-        private static Logger _instance = null;
-        public static Logger Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new Logger();
-
-                return _instance;
-            }
-        }
-
         public LogLevels Level { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public static readonly Logger Instance = null;
+
+        static Logger()
+        {
+            Instance = new Logger();
+        }
 
         public void Log(string message)
         {
@@ -32,8 +27,7 @@ namespace BitBrawl.Network
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine(message);
-                //Nez.Console.DebugConsole.Instance.Log(message);
+                Nez.Console.DebugConsole.Instance.Log(message);
             }
         }
 

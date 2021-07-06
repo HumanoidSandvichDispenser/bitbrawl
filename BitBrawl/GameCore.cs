@@ -50,7 +50,7 @@ namespace BitBrawl
 
             NetworkManager.Self.Connected += OnConnectedToServer;
 
-            NetworkManager.Self.Initialize(NetworkConfiguration, Network.Logger.Instance);
+            NetworkManager.Self.Initialize(NetworkConfiguration, DebugConsole.Logger.Instance);
 
             if (IsServer)
             {

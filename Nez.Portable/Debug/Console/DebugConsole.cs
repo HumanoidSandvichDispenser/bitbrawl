@@ -61,6 +61,7 @@ namespace Nez.Console
 		float _repeatCounter = 0;
 		Keys? _repeatKey = null;
 		bool _canOpen;
+		Stack<string> _logStack;
 		public static Keys ConsoleKey = Keys.OemTilde;
 #if DEBUG
 		internal RuntimeInspector _runtimeInspector;
@@ -80,6 +81,7 @@ namespace Nez.Console
 			_commands = new Dictionary<string, CommandInfo>();
 			_sorted = new List<string>();
 			_functionKeyActions = new Action[12];
+			_logStack = new Stack<string>();
 
 			BuildCommandsList();
 		}
@@ -113,6 +115,18 @@ namespace Nez.Console
 
 		public void Log(string str)
 		{
+			// the debug console may be logged before the GraphicsDevice is initialized
+			if (Core.GraphicsDevice == null)
+            {
+				_logStack.Push(str);
+				return;
+			}
+			else if (_logStack.Count > 0)
+            {
+				// the top of the log stack will be at the bottom of the recursive call stack
+				Log(_logStack.Pop());
+            }
+
 			// split up multi-line logs and log each line seperately
 			var parts = str.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
 			if (parts.Length > 1)
