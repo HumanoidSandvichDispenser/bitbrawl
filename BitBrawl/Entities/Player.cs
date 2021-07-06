@@ -31,7 +31,12 @@ namespace BitBrawl.Entities
 
         public object GetState()
         {
-            return new Network.PlayerState().FromObject(this);
+            object state = new Network.PlayerState().FromObject(this);
+            if (GameCore.IsServer)
+            {
+                System.Console.WriteLine(((Network.PlayerState)state).Position);
+            }    
+            return state;
         }
 
         public void UpdateFromState(object entityState, double stateTime, bool isReckoning)
@@ -50,8 +55,9 @@ namespace BitBrawl.Entities
                     // snap player to its server position if their local position is too far
                     if (desyncDistance > 1024)
                     {
-                        Debug.DrawHollowBox(Position, 4, Color.Red, 1);
-                        Debug.DrawHollowBox(playerState.Position, 4, Color.Blue, 1);
+                        _lerpTo = default; // don't interpolate if we are far. otherwise bugs will occur
+                        Debug.DrawPixel(Position, 4, Color.Red, 2);
+                        Debug.DrawPixel(playerState.Position, 4, Color.Blue, 2);
                         Position = playerState.Position;
                     }
                     // but if we are a tiny bit off, interpolate to its correct position
@@ -87,7 +93,7 @@ namespace BitBrawl.Entities
             {
                 if (_lerpTo != default)
                 {
-                    Position = Vector2.Lerp(Position, _lerpTo, 0.25f);
+                    Position = Vector2.Lerp(Position, _lerpTo, 0.4f);
                 }
             }
         }

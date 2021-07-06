@@ -10,6 +10,18 @@ namespace BitBrawl.Network
     /// </summary>
     public class Logger : ILogger
     {
+        private static Logger _instance = null;
+        public static Logger Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new Logger();
+
+                return _instance;
+            }
+        }
+
         public LogLevels Level { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Log(string message)

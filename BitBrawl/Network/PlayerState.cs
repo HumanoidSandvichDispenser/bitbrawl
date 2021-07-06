@@ -46,6 +46,7 @@ namespace BitBrawl.Network
         {
             if (obj is Player player)
             {
+                OwnerId = player.GetClientId();
                 PositionX = player.Position.X;
                 PositionY = player.Position.Y;
                 HumanoidDirectionX = player.Humanoid.Controller.Direction.X;

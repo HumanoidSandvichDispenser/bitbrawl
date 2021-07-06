@@ -36,10 +36,35 @@ namespace BitBrawl.Scenes
                 var sadegTex = Content.Load<Texture2D>("Sprites/Debug/Sadeg");
 
                 var player = new Entities.Player();
-                player.SetEntityId(playerInitState.OwnerId, (player.Id & uint.MaxValue));
-                System.Diagnostics.Debug.WriteLine($"Creating entity owned by {player.GetClientId()}");
+                player.SetEntityId(playerInitState.OwnerId, player.Id & uint.MaxValue);
+                Network.Logger.Instance.Info($"Creating entity owned by {player.GetClientId()}");
                 player.Renderer = player.AddComponent(new SpriteRenderer(sadegTex));
                 player.Position = new Vector2(250, 250); // TODO: replace this a player spawn function
+                AddEntity(player);
+
+                // if we own this entity, this entity should be our local player
+                if (player.IsOwned())
+                {
+                    player.Humanoid.Controller = player.AddComponent(_localPlayerController);
+
+                    _localPlayer = player;
+                }
+                else
+                {
+                    player.Humanoid.Controller = new Components.Controllers.Controller();
+                }
+
+                ent = player;
+            }
+            else if (entityData is Network.PlayerState playerState)
+            {
+                var sadegTex = Content.Load<Texture2D>("Sprites/Debug/Sadeg");
+
+                var player = new Entities.Player();
+                player.SetEntityId(playerState.OwnerId, player.Id & uint.MaxValue);
+                System.Diagnostics.Debug.WriteLine($"Creating entity owned by {player.GetClientId()}");
+                player.Renderer = player.AddComponent(new SpriteRenderer(sadegTex));
+                player.Position = playerState.Position;
                 AddEntity(player);
 
                 // if we own this entity, this entity should be our local player

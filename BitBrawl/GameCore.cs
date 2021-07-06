@@ -31,10 +31,17 @@ namespace BitBrawl
         {
             IsServer = isServer;
 
+            Batcher.UseFnaHalfPixelMatrix = true;
+
             NetworkConfiguration = new NetworkConfiguration();
             NetworkConfiguration.ApplicationName = "BitBrawl";
             NetworkConfiguration.ApplicationPort = 7777;
-            NetworkConfiguration.DeadReckonSeconds = 1 / 20f;
+
+            // we should only be able to reckon if we are the server
+            // otherwise we are trusting other clients (which we don't want)
+            if (IsServer)
+                NetworkConfiguration.DeadReckonSeconds = 1 / 20f;
+
             NetworkConfiguration.EntityStateTypes = new System.Collections.Generic.List<System.Type>
             {
                 typeof(Network.PlayerState),
@@ -43,7 +50,7 @@ namespace BitBrawl
 
             NetworkManager.Self.Connected += OnConnectedToServer;
 
-            NetworkManager.Self.Initialize(NetworkConfiguration, new Network.Logger());
+            NetworkManager.Self.Initialize(NetworkConfiguration, Network.Logger.Instance);
 
             if (IsServer)
             {

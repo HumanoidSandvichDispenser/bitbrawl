@@ -7,6 +7,7 @@ namespace BitBrawl.Client
         [STAThread]
         static void Main()
         {
+            GameCore.PauseOnFocusLost = false;
             using (var game = new GameCore(false))
                 game.Run();
         }
