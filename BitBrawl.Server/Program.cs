@@ -4,9 +4,11 @@ namespace BitBrawl.Server
 {
     class Program
     {
-        static void Main(string[] args)
+        [STAThread]
+        static void Main()
         {
-            Console.WriteLine("Hello World!");
+            using (var game = new GameCore(true))
+                game.Run();
         }
     }
 }

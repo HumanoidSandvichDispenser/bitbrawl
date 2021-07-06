@@ -4,6 +4,6 @@ namespace BitBrawl.Components.Physics
 {
     public class BodyMover : Component
     {
-        public
+        
     }
 }

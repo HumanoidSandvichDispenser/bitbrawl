@@ -131,6 +131,12 @@ namespace Nez
 			}
 		}
 
+		public string WindowTitle
+        {
+			get => _windowTitle;
+			set => _windowTitle = value;
+        }
+
 
 		public Core(int width = 1280, int height = 720, bool isFullScreen = false, string windowTitle = "Nez", string contentDirectory = "Content")
 		{

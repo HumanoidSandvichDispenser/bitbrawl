@@ -1,17 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nez.Portable\Nez.csproj" />
+    <None Remove="Content\Content.mgcb" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Enums\" />
-    <Folder Include="Scenes\" />
+    <ProjectReference Include="..\Nez.Portable\Nez.csproj" />
+    <ProjectReference Include="..\redgrin\RedGrin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\Debug\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
 
   <ItemGroup>

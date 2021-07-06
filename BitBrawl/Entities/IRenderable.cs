@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Nez;
+using Nez.Sprites;
 
 namespace BitBrawl.Entities
 {
+    /// <summary>
+    /// Interface that can be added to an Entity that requires a SpriteRenderer component
+    /// </summary>
     public interface IRenderable
     {
-        public Nez.Sprites.SpriteRenderer Renderer { get; set; }
+        public SpriteRenderer Renderer { get; set; }
     }
 }

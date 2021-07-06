@@ -1,17 +1,95 @@
 ﻿using BitBrawl.Components;
+using Microsoft.Xna.Framework;
 using Nez;
+using Nez.Sprites;
+using RedGrin.Interfaces;
 
 namespace BitBrawl.Entities
 {
     /// <summary>
     /// Players are special, rigid entities that contain all the information about a player.
     /// </summary>
-    public class Player : Entity
+    public class Player : Entity, IRenderable, INetworkEntity
     {
-        public int UserId { get; set; }
+        ulong INetworkEntity.Id { get; set; }
 
         public string Username { get; set; }
 
         public Humanoid Humanoid { get; set; }
+
+        public SpriteRenderer Renderer { get; set; }
+
+        private Network.PlayerState _previousState = default;
+        private Vector2 _lerpTo = default;
+        
+
+        public Player()
+        {
+            Humanoid = AddComponent(new Humanoid());
+            Renderer = AddComponent(new SpriteAnimator());
+        }
+
+        public object GetState()
+        {
+            return new Network.PlayerState().FromObject(this);
+        }
+
+        public void UpdateFromState(object entityState, double stateTime, bool isReckoning)
+        {
+            if (entityState is Network.PlayerState playerState)
+            {
+                if (GameCore.IsServer || !(this as INetworkEntity).IsOwned())
+                {
+                    Humanoid.Controller.Direction = playerState.HumanoidDirection;
+                }
+
+                if (!GameCore.IsServer)
+                {
+                    float desyncDistance = (playerState.Position - Position).LengthSquared();
+
+                    // snap player to its server position if their local position is too far
+                    if (desyncDistance > 1024)
+                    {
+                        Debug.DrawHollowBox(Position, 4, Color.Red, 1);
+                        Debug.DrawHollowBox(playerState.Position, 4, Color.Blue, 1);
+                        Position = playerState.Position;
+                    }
+                    // but if we are a tiny bit off, interpolate to its correct position
+                    else if (desyncDistance > 1)
+                    {
+                        _lerpTo = playerState.Position;
+                    }
+                }
+
+                Renderer.FlipX = playerState.Flip;
+            }
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            
+            if (!RedGrin.NetworkManager.Self.IsConnected)
+                return;
+
+            if ((this as INetworkEntity).IsOwned())
+            {
+                var currentState = (Network.PlayerState)GetState();
+
+                if (currentState.ShouldUpdate(_previousState))
+                {
+                    RedGrin.NetworkManager.Self.RequestUpdateEntity(this);
+                    _previousState = (Network.PlayerState)GetState();
+                }
+            }
+            else if (GameCore.IsClient)
+            {
+                if (_lerpTo != default)
+                {
+                    Position = Vector2.Lerp(Position, _lerpTo, 0.25f);
+                }
+            }
+        }
     }
 }
