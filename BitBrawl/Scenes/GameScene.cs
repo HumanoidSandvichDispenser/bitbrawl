@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BitBrawl.Extensions;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.Sprites;
@@ -38,7 +39,7 @@ namespace BitBrawl.Scenes
                 var player = new Entities.Player();
                 player.SetEntityId(playerInitState.OwnerId, player.Id & uint.MaxValue);
                 DebugConsole.Logger.Instance.Info($"Creating entity owned by {player.GetClientId()}");
-                player.Renderer = player.AddComponent(new SpriteRenderer(sadegTex));
+                player.Renderer.SetTexture(sadegTex);
                 player.Position = new Vector2(250, 250); // TODO: replace this a player spawn function
                 AddEntity(player);
 

@@ -27,13 +27,14 @@ namespace BitBrawl.DebugConsole
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine(message);
                 Nez.Console.DebugConsole.Instance.Log(message);
             }
         }
 
         public void Debug(string message)
         {
-            Console.WriteLine(message);
+            Log(message);
         }
 
         public void Error(string message)

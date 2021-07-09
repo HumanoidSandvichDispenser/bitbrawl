@@ -18,7 +18,7 @@ namespace BitBrawl
         /// <summary>
         /// Tickrate of the server (applies to BitBrawl.Server instances only)
         /// </summary>
-        public static int ServerTickRate { get; } = 32;
+        public static readonly int ServerTickRate = 60;
 
         /// <summary>
         /// More readable way to express if the game is not running as a server (i.e. as a client). See <see cref="IsServer"/>
@@ -40,7 +40,11 @@ namespace BitBrawl
             // we should only be able to reckon if we are the server
             // otherwise we are trusting other clients (which we don't want)
             if (IsServer)
-                NetworkConfiguration.DeadReckonSeconds = 1 / 20f;
+            {
+                IsFixedTimeStep = true;
+                //NetworkConfiguration.DeadReckonSeconds = 1;// / 20f;
+                //NetworkConfiguration.SimulatedMinimumLatencySeconds = 0.125f;
+            }
 
             NetworkConfiguration.EntityStateTypes = new System.Collections.Generic.List<System.Type>
             {
@@ -60,6 +64,7 @@ namespace BitBrawl
             }
             else
             {
+                WindowTitle = "BitBrawl";
                 NetworkManager.Self.Start(NetworkRole.Client);
             }
         }
@@ -88,10 +93,13 @@ namespace BitBrawl
             NetworkManager.Self.Update();
         }
 
-        [Nez.Console.Command("connect", "Connects to an address")]
+        [Nez.Console.Command("connect", "Connects to an address or starts the server if host")]
         public static void ConnectToAddress(string address)
         {
-            NetworkManager.Self.Connect(address);
+            if (IsClient)
+                NetworkManager.Self.Connect(address);
+            else
+                NetworkManager.Self.Start(NetworkRole.Server);
         }
 
         [Nez.Console.Command("disconnect", "Disconnects from the current connection or drops all connection if host")]
@@ -104,7 +112,8 @@ namespace BitBrawl
         [Nez.Console.Command("test", "Connects to localhost test server")]
         public static void Test()
         {
-            NetworkManager.Self.Connect("localhost");
+            if (IsClient)
+                NetworkManager.Self.Connect("localhost");
         }
 #endif
     }

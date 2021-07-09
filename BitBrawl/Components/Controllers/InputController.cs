@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BitBrawl.Extensions;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Nez;
 
@@ -10,30 +11,29 @@ namespace BitBrawl.Components.Controllers
         {
             Direction = Vector2.Zero;
 
-            if (Input.IsKeyDown(Keys.W))
+            if (Utils.Keybinds.IsKeybindDown("moveup"))
             {
                 Direction += new Vector2(0, -1);
             }
 
-            if (Input.IsKeyDown(Keys.S))
+            if (Utils.Keybinds.IsKeybindDown("movedown"))
             {
                 Direction += new Vector2(0, 1);
             }
 
-            if (Input.IsKeyDown(Keys.A))
+            if (Utils.Keybinds.IsKeybindDown("moveleft"))
             {
                 Direction += new Vector2(-1, 0);
             }
 
-            if (Input.IsKeyDown(Keys.D))
+            if (Utils.Keybinds.IsKeybindDown("moveright"))
             {
                 Direction += new Vector2(1, 0);
             }
 
-            if (Input.GamePads.Length > 0)
-            {
-                Direction += Input.GamePads[0].GetLeftStick();
-            }
+            Vector2 stickDir = Input.GamePads[0].GetLeftStick();
+
+            Direction += stickDir.InvertY();
         }
     }
 }

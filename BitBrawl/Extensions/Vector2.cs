@@ -6,6 +6,28 @@ namespace BitBrawl.Extensions
     public static class Vector2Extensions
     {
         /// <summary>
+        /// Inverts the X component of the vector
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public static Vector2 InvertX(this ref Vector2 vector)
+        {
+            vector.X *= -1;
+            return vector;
+        }
+
+        /// <summary>
+        /// Inverts the Y component of the vector
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public static Vector2 InvertY(this ref Vector2 vector)
+        {
+            vector.Y *= -1;
+            return vector;
+        }
+
+        /// <summary>
         /// Returns whether or not the X or Y component is not a number
         /// </summary>
         /// <param name="vec"></param>

@@ -16,7 +16,7 @@ namespace BitBrawl.Network
             return this;
         }
 
-        public void ToObject(object obj)
+        public void ToObject(object obj, double time)
         {
             
         }

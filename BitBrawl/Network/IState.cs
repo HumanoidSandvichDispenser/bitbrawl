@@ -16,7 +16,7 @@ namespace BitBrawl.Network
         /// Sets this state to an object's properties
         /// </summary>
         /// <param name="obj"></param>
-        public void ToObject(object obj);
+        public void ToObject(object obj, double latency);
 
         /// <summary>
         /// Determines whether or not the state should be updated to the server

@@ -27,12 +27,21 @@ namespace BitBrawl.Components
 
         public void Update()
         {
+            Simulate(Time.DeltaTime);
+        }
+
+        /// <summary>
+        /// Simulates the Humanoid's position after a given amount of delta time.
+        /// </summary>
+        /// <param name="deltaTime"></param>
+        public Vector2 Simulate(float deltaTime, bool move = true)
+        {
             Vector2 accel = Vector2.Zero;
 
             if (!Controller.Direction.IsNaN() && Controller.Direction != Vector2.Zero)
             {
                 Vector2 dir = Controller.Direction;
-                accel = dir.Clamp() * Speed * (1 - Friction) * Time.DeltaTime;
+                accel = dir.Clamp() * Speed * (1 - Friction) * deltaTime;
             }
 
             // decelerate by friction
@@ -51,7 +60,10 @@ namespace BitBrawl.Components
             velocity.Clamp(0, Speed); // can't directly use property
             Velocity = velocity;
 
-            Entity.Position += Velocity;
+            if (move)
+                Entity.Position += Velocity;
+
+            return Entity.Position;
         }
     }
 }
