@@ -10,11 +10,13 @@ namespace BitBrawl.Utils
 
         static Keybinds()
         {
-            _keymaps = new Dictionary<string, Keys>();
-            _keymaps.Add("moveup", Keys.W);
-            _keymaps.Add("movedown", Keys.S);
-            _keymaps.Add("moveleft", Keys.A);
-            _keymaps.Add("moveright", Keys.D);
+            _keymaps = new Dictionary<string, Keys>
+            {
+                { "moveup", Keys.W },
+                { "movedown", Keys.S },
+                { "moveleft", Keys.A },
+                { "moveright", Keys.D }
+            };
         }
 
         /// <summary>

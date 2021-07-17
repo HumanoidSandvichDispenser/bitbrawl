@@ -27,7 +27,7 @@ namespace BitBrawl
 
         public static NetworkConfiguration NetworkConfiguration { get; set; }
 
-        public GameCore(bool isServer) : base()
+        public GameCore(bool isServer, bool isVsync = false) : base(isVsync: isVsync)
         {
             IsServer = isServer;
 
@@ -36,6 +36,8 @@ namespace BitBrawl
             NetworkConfiguration = new NetworkConfiguration();
             NetworkConfiguration.ApplicationName = "BitBrawl";
             NetworkConfiguration.ApplicationPort = 7777;
+
+            DebugRenderEnabled = true;
 
             // we should only be able to reckon if we are the server
             // otherwise we are trusting other clients (which we don't want)

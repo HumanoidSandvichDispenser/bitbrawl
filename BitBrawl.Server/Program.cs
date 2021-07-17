@@ -11,8 +11,10 @@ namespace BitBrawl.Server
             CommandLineThread = new System.Threading.Thread(ReadEvalPrintLoop);
             CommandLineThread.Start();
 
-            using (var game = new GameCore(true))
+            using (var game = new GameCore(true, false))
+            {
                 game.Run();
+            }
         }
 
         static void ReadEvalPrintLoop()

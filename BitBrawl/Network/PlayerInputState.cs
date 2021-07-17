@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BitBrawl.Extensions;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +19,11 @@ namespace BitBrawl.Network
         public byte OwnerId;
 
         /// <summary>
+        /// The client's current tick when this packet was sent
+        /// </summary>
+        public uint Tick;
+
+        /// <summary>
         /// The X component of the direction the player's humanoid is traveling in
         /// </summary>
         public float HumanoidDirectionX;
@@ -26,14 +33,40 @@ namespace BitBrawl.Network
         /// </summary>
         public float HumanoidDirectionY;
 
+        public Vector2 HumanoidDirection
+        {
+            get
+            {
+                return new Vector2(HumanoidDirectionX, HumanoidDirectionY);
+            }
+            set
+            {
+                HumanoidDirectionX = value.X;
+                HumanoidDirectionY = value.Y;
+            }
+        }
+
         public object FromObject(object obj)
         {
-            throw new NotImplementedException();
+            if (obj is Entities.Player player)
+            {
+                HumanoidDirection = player.Humanoid.Controller.Direction;
+            }
+
+            return this;
         }
 
         public bool ShouldUpdate(IState previousState)
         {
-            throw new NotImplementedException();
+            if (previousState is PlayerState previousPlayerState)
+            {
+                // if our direction changes more than 1/8 units, then this state should be updated on the server
+                if (!(HumanoidDirection - previousPlayerState.HumanoidDirection).LengthSquared()
+                    .IsApproximately(0, 1/64f))
+                    return true;
+            }
+
+            return false;
         }
 
         public void ToObject(object obj, double time)

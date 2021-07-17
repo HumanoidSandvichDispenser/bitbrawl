@@ -22,10 +22,11 @@ namespace BitBrawl.Entities
         public SpriteRenderer Renderer { get; set; }
 
         internal Vector2 _lerpTo = default;
-        private Network.PlayerState _previousState = default;
+        private Network.PlayerInputState _previousState = default;
         internal Entity _debugServerPlayer = null;
         //internal SortedDictionary<int, Network.PlayerState> _stateBuffer = new SortedDictionary<int, Network.PlayerState>();
         internal Network.PlayerState[] _stateBuffer = new Network.PlayerState[1024];
+        internal Network.PlayerInputState[] _inputBuffer = new Network.PlayerInputState[1024];
         
 
         public Player()
@@ -49,7 +50,22 @@ namespace BitBrawl.Entities
 
         public object GetState()
         {
-            object state = new Network.PlayerState().FromObject(this);
+            object state = null;
+            if (GameCore.IsServer)
+            {
+                // send the full state of the client (including position) as the server
+                var playerState = (Network.PlayerState)new Network.PlayerState().FromObject(this);
+                playerState.Tick = 0;
+            }
+            else if ((this as INetworkEntity).IsOwned())
+            {
+                // we only want to send player input as the client
+                state = new Network.PlayerInputState().FromObject(this);
+            }
+            else
+            {
+                throw new System.Exception("This client does not have control over this entity.");
+            }
             return state;
         }
 
@@ -71,6 +87,7 @@ namespace BitBrawl.Entities
 
             var currentState = (Network.PlayerState)GetState();
 
+            /*
             if ((this as INetworkEntity).IsOwned() || GameCore.IsServer)
             {
                 uint bufferSlot = currentState.Tick % 1024;
@@ -85,6 +102,19 @@ namespace BitBrawl.Entities
                     {
                         DebugConsole.Logger.Instance.Info($"[{RedGrin.NetworkManager.Self.GetTick()}] Sending player info");
                     }
+                }
+            }
+            */
+            if ((this as INetworkEntity).IsOwned())
+            {
+                uint bufferSlot = currentState.Tick % 1024;
+                _stateBuffer[bufferSlot] = (Network.PlayerState)new Network.PlayerState().FromObject(this);
+                _inputBuffer[bufferSlot] = (Network.PlayerInputState)new Network.PlayerInputState().FromObject(this);
+
+                if (_stateBuffer[bufferSlot].ShouldUpdate(_previousState))
+                {
+                    // on clients, updating the requested entity only sends PlayerInputStates
+                    RedGrin.NetworkManager.Self.RequestUpdateEntity(this);
                 }
             }
             if (GameCore.IsClient)

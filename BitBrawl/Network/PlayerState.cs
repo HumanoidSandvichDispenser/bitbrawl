@@ -15,7 +15,7 @@ namespace BitBrawl.Network
         public byte OwnerId;
 
         /// <summary>
-        /// The server's current tick when this packet was sent
+        /// The client's current tick when the original PlayerInputState was sent
         /// </summary>
         public uint Tick;
 
@@ -117,12 +117,15 @@ namespace BitBrawl.Network
                             // until it reaches the present
 
                             //player.Position = player._stateBuffer[Tick % 1024].Position;
-                            
-                            uint rewindTick = Tick;
-                            uint currentTick = NetworkManager.Self.GetTick();
-                            uint deltaTicks = 1;
 
-                            while (rewindTick < currentTick)
+
+                            uint currentTick = NetworkManager.Self.GetTick();
+                            uint tickLatency = currentTick - Tick;
+                            uint rewindTick = 2 * Tick - currentTick + 1; // expanded from Tick - (currentTick - Tick)
+                            uint deltaTicks = 2;
+                            DebugConsole.Logger.Instance.Debug(tickLatency.ToString());
+
+                            while (rewindTick <= currentTick)
                             {
                                 uint bufferSlot = rewindTick % 1024;
 
@@ -133,19 +136,21 @@ namespace BitBrawl.Network
                                     if (rewindTick == Tick)
                                     {
                                         DebugConsole.Logger.Instance.Debug($"At tick {Tick} I was at {Position}");
+                                        DebugConsole.Logger.Instance.Debug($"At tick {Tick} my direction was {player._stateBuffer[bufferSlot].HumanoidDirection}");
                                         player.Position = Position;
                                     }
 
                                     player.Humanoid.Controller.Direction = player._stateBuffer[bufferSlot].HumanoidDirection;
-                                    Vector2 oldPos = player._stateBuffer[bufferSlot].Position;
+                                    //Vector2 oldPos = player._stateBuffer[bufferSlot].Position;
+                                    // multiplying it by 2 works for some reason?????
                                     Vector2 newPos = player.Humanoid.Simulate(deltaTicks / (float)GameCore.ServerTickRate);
-                                    player._stateBuffer[bufferSlot].Position = newPos;
+                                    Debug.DrawPixel(newPos, 4, Color.FromNonPremultiplied(255, 255, 255, 255 - 8 * ((int)currentTick - (int)rewindTick)), 1);
 
                                     if (rewindTick == currentTick - 1)
                                     {
                                         DebugConsole.Logger.Instance.Debug($"[{Tick}] Projected position from ticks {rewindTick} to {currentTick}: {oldPos} to {newPos}");
                                     }
-                                    deltaTicks = 1;
+                                    deltaTicks = 2;
                                 }
                                 else
                                 {
